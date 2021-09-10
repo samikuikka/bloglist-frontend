@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginServices from './services/login'
 import LoginForm from './components/LoginForm'
 import CreateForm from './components/CreateForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,9 +12,14 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  //Adding blogs
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  //Notification
+  const [message, setMessage] = useState(null)
+  const [isError, setError] = useState(true)
 
 
   useEffect(() => {
@@ -45,8 +51,18 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+
+      setError(false)
+      setMessage('Logged in!')
+      setTimeout(()=> {
+        setMessage(null)
+      }, 3000)
     } catch (exception) {
-      console.log(exception)
+      setError(true)
+      setMessage('Wrong username or password')
+      setTimeout(()=> {
+        setMessage(null)
+      }, 3000)
     }
   }
 
@@ -73,12 +89,20 @@ const App = () => {
         setTitle('')
         setAuthor('')
         setUrl('')
+        console.log(blog)
+
+        setError(false)
+        setMessage(`a new blog "${blog.title}" by ${blog.author} added.`)
+        setTimeout(()=> {
+          setMessage(null)
+        }, 3000)
       })
   }
 
   if(user === null) {
     return (
       <div>
+          <Notification message={message} isError={isError} />
           <LoginForm
            onSubmit={handleLogin}
            username={username}
@@ -92,6 +116,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={message} isError={isError} />
       <div>
         <p>{user.name} logged in. <button type="button" onClick={handleLogout}>logout</button></p>
       </div>
