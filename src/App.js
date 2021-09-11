@@ -63,6 +63,23 @@ const App = () => {
     }
   }
 
+  const increaseLike = id => {
+    const blog = blogs.find(blog => blog.id === id)
+
+    const data = {
+      title: blog.title,
+      author: blog.title,
+      url: blog.url,
+      likes: blog.likes + 1,
+    }
+
+    blogService
+      .update(id, data)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+      })
+  }
+
 
   const handleLogout = async (event) => {
     event.preventDefault()
@@ -121,7 +138,7 @@ const App = () => {
       </Togglable>
     
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} increaseLike={() => increaseLike(blog.id)} />
       )}
     </div>
   )
