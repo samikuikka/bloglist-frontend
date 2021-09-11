@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 
+
 const CreateForm = ({createBlog}) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -51,5 +52,6 @@ const CreateForm = ({createBlog}) => {
     </form>
     )
 }
+
 
 export default CreateForm
