@@ -22,10 +22,10 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
-  
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
@@ -51,13 +51,13 @@ const App = () => {
 
       setError(false)
       setMessage('Logged in!')
-      setTimeout(()=> {
+      setTimeout(() => {
         setMessage(null)
       }, 3000)
     } catch (exception) {
       setError(true)
       setMessage('Wrong username or password')
-      setTimeout(()=> {
+      setTimeout(() => {
         setMessage(null)
       }, 3000)
     }
@@ -95,14 +95,14 @@ const App = () => {
 
         setError(false)
         setMessage(`a new blog "${blog.title}" by ${blog.author} added.`)
-        setTimeout(()=> {
+        setTimeout(() => {
           setMessage(null)
         }, 3000)
       })
       .catch(error => {
         setError(true)
         setMessage(`${error}`)
-        setTimeout(()=> {
+        setTimeout(() => {
           setMessage(null)
         }, 3000)
       })
@@ -116,23 +116,23 @@ const App = () => {
     if(result) {
       blogService
         .deleteBlog(id)
-        .then(response => {
+        .then(() => {
           setBlogs(blogs.filter(b => b.id !== id))
 
-        //Succes message
-        setError(false);
-        setMessage(`${blog.title} deleted!`);
-        setTimeout( () => {
-          setMessage(null);
-        },3000)
+          //Succes message
+          setError(false)
+          setMessage(`${blog.title} deleted!`)
+          setTimeout( () => {
+            setMessage(null)
+          },3000)
         })
         .catch(error => {
           //Error message
           console.log(error.response.data)
-          setError(true);
-          setMessage(`Error in deleting a person: ${error.response.data.error}`);
+          setError(true)
+          setMessage(`Error in deleting a person: ${error.response.data.error}`)
           setTimeout(() => {
-            setMessage(null);
+            setMessage(null)
           }, 3000)
         })
     }
@@ -142,14 +142,14 @@ const App = () => {
   if(user === null) {
     return (
       <div>
-          <Notification message={message} isError={isError} />
-          <LoginForm
-           onSubmit={handleLogin}
-           username={username}
-           onUserNameChange={({ target }) => setUsername(target.value)}
-           password={password}
-           onPasswordChange={({ target }) => setPassword(target.value)}
-           />
+        <Notification message={message} isError={isError} />
+        <LoginForm
+          onSubmit={handleLogin}
+          username={username}
+          onUserNameChange={({ target }) => setUsername(target.value)}
+          password={password}
+          onPasswordChange={({ target }) => setPassword(target.value)}
+        />
       </div>
     )
   }
@@ -167,7 +167,7 @@ const App = () => {
           createBlog={addBlog}
         />
       </Togglable>
-    
+
       {blogs.sort((x,y) => y.likes - x.likes).map(blog =>
         <Blog key={blog.id} blog={blog} increaseLike={() => increaseLike(blog.id)} deleteBlog={() => deleteBlog(blog.id)} user={user} />
       )}

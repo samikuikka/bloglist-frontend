@@ -7,7 +7,7 @@ const login = async credentials => {
 }
 
 const loginServices = {
-    login
+  login
 }
 
 export default loginServices
