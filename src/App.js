@@ -108,6 +108,36 @@ const App = () => {
       })
   }
 
+  const deleteBlog = id => {
+    const blog = blogs.find(blog => blog.id === id)
+    const result = window.confirm(`Remove ${blog.title} by ${blog.author}?`)
+    console.log(blog)
+
+    if(result) {
+      blogService
+        .deleteBlog(id)
+        .then(response => {
+          setBlogs(blogs.filter(b => b.id !== id))
+
+        //Succes message
+        setError(false);
+        setMessage(`${blog.title} deleted!`);
+        setTimeout( () => {
+          setMessage(null);
+        },3000)
+        })
+        .catch(error => {
+          //Error message
+          console.log(error.response.data)
+          setError(true);
+          setMessage(`Error in deleting a person: ${error.response.data.error}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000)
+        })
+    }
+  }
+
 
   if(user === null) {
     return (
@@ -139,7 +169,7 @@ const App = () => {
       </Togglable>
     
       {blogs.sort((x,y) => y.likes - x.likes).map(blog =>
-        <Blog key={blog.id} blog={blog} increaseLike={() => increaseLike(blog.id)} />
+        <Blog key={blog.id} blog={blog} increaseLike={() => increaseLike(blog.id)} deleteBlog={() => deleteBlog(blog.id)} user={user} />
       )}
     </div>
   )
