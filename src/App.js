@@ -13,10 +13,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  //Adding blogs
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   //Notification
   const [message, setMessage] = useState(null)
@@ -74,26 +70,21 @@ const App = () => {
     window.localStorage.clear()
   }
 
-  const addBlog = async(event) => {
-    event.preventDefault()
-
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url
-    }
-
+  const addBlog = (blogObject) => {
     blogService
       .create(blogObject)
       .then(blog => {
         setBlogs(blogs.concat(blog))
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-        console.log(blog)
 
         setError(false)
         setMessage(`a new blog "${blog.title}" by ${blog.author} added.`)
+        setTimeout(()=> {
+          setMessage(null)
+        }, 3000)
+      })
+      .catch(error => {
+        setError(true)
+        setMessage(`${error}`)
         setTimeout(()=> {
           setMessage(null)
         }, 3000)
@@ -125,13 +116,7 @@ const App = () => {
       <Togglable buttonLabel='create new blog'>
         <h2>create new</h2>
         <CreateForm
-          onSubmit={addBlog}
-          title={title}
-          onTitleChange={({target}) => setTitle(target.value)}
-          author={author}
-          onAuthorChange={({target}) => setAuthor(target.value)}
-          url={url}
-          onUrlChange={({target}) => setUrl(target.value)}
+          createBlog={addBlog}
         />
       </Togglable>
     
