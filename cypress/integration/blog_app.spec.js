@@ -55,7 +55,36 @@ describe('Blog app', function() {
 
         cy.contains('The Art of Coding')
       })
+
+      describe('A note exists', function() {
+        beforeEach(function() {
+          cy.contains('create new blog').click()
+          cy.get('#title').type('The Art of Coding')
+          cy.get('#author').type('Loon')
+          cy.get('#url').type('http://abcdefghjlk.com')
+          cy.get('#create-button').click()
+        })
+
+        it.only('A blog can be liked', function() {
+
+          cy.get('.blogs')
+            .contains('The Art of Coding')
+            .get('#view-button')
+            .click()
+
+          cy.get('.blogs')
+            .contains('The Art of Coding')
+            .get('#like-button')
+            .click()
+
+          cy.get('.blogs')
+            .contains('The Art of Coding')
+            .get('#likes')
+            .contains('1')
+        })
+      })
     })
+
 
   })
 

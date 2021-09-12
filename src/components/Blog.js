@@ -29,14 +29,14 @@ const Blog = ({ blog, increaseLike, deleteBlog, user }) => {
 
 
   return(
-    <div>
+    <div className="blog">
       <div style={hideStyle} className='hideStyle'>
-        {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
+        {blog.title} {blog.author} <button id="view-button" onClick={toggleVisibility}>view</button>
       </div>
       <div style={showStyle} className={'showStyle'}>
         {blog.title} <button onClick={toggleVisibility}>hide</button> <br/>
         {blog.url}<br/>
-        {blog.likes} <button onClick={increaseLike}>like</button><br/>
+        <div id='likes'>{blog.likes}</div> <button id='like-button' onClick={increaseLike}>like</button><br/>
         {blog.author}<br/>
         {blog.user.username === user.username || blog.user === user.id ? <button onClick={deleteBlog}>remove</button> : ''}<br/>
       </div>
