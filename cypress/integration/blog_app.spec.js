@@ -65,7 +65,7 @@ describe('Blog app', function() {
           cy.get('#create-button').click()
         })
 
-        it.only('A blog can be liked', function() {
+        it('A blog can be liked', function() {
 
           cy.get('.blogs')
             .contains('The Art of Coding')
@@ -82,6 +82,21 @@ describe('Blog app', function() {
             .get('#likes')
             .contains('1')
         })
+
+        it.only('A blog can be deleted by user who created it', function() {
+
+          cy.get('.blogs')
+            .contains('The Art of Coding')
+            .get('#view-button')
+            .click()
+
+          cy.get('.blogs')
+            .contains('remove')
+            .click()
+
+          cy.get('html').should('not.contain', 'The Art of Coding')
+        })
+
       })
     })
 
