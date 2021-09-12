@@ -23,3 +23,13 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+
+Cypress.Commands.add('createNote', ({ title, author, url }) => {
+  cy.contains('create new blog').click()
+  cy.get('#title').type(title)
+  cy.get('#author').type(author)
+  cy.get('#url').type(url)
+  cy.get('#create-button').click()
+  cy.visit('http://localhost:3000')
+})

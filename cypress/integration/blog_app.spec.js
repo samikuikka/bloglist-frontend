@@ -56,13 +56,12 @@ describe('Blog app', function() {
         cy.contains('The Art of Coding')
       })
 
-      describe('A note exists', function() {
+      describe('A few blogs exists', function() {
         beforeEach(function() {
-          cy.contains('create new blog').click()
-          cy.get('#title').type('The Art of Coding')
-          cy.get('#author').type('Loon')
-          cy.get('#url').type('http://abcdefghjlk.com')
-          cy.get('#create-button').click()
+
+          cy.createNote({ title: 'The Art of Coding', author: 'Tom', url: 'url 1' })
+          cy.createNote({ title: 'blog 2', author: 'Brad', url: 'url 2' })
+          cy.createNote({ title: 'blog 3', author: 'Alise', url: 'url 3' })
         })
 
         it('A blog can be liked', function() {
@@ -83,7 +82,7 @@ describe('Blog app', function() {
             .contains('1')
         })
 
-        it.only('A blog can be deleted by user who created it', function() {
+        it('A blog can be deleted by user who created it', function() {
 
           cy.get('.blogs')
             .contains('The Art of Coding')
@@ -96,6 +95,39 @@ describe('Blog app', function() {
 
           cy.get('html').should('not.contain', 'The Art of Coding')
         })
+
+        it.only('Blogs shown in order of likes', function() {
+          //Like first blog 1 times
+          cy.get('.blogs')
+            .contains('The Art of Coding')
+            .get('#view-button')
+            .click()
+
+          cy.get('.blogs')
+            .contains('The Art of Coding')
+            .get('#like-button')
+            .click()
+
+          //Like last blog 2 times
+          cy.get('.blogs')
+            .contains('blog 3')
+            .contains('view')
+            .click()
+
+          cy.get('.blogs')
+            .contains('url 3')
+            .contains('like')
+            .click()
+            .wait(1000)
+            .click()
+
+          cy.wait(1000)
+
+          cy.get('.blogs').get('.blog:first').contains('blog 3')
+          cy.get('.blogs').get('.blog:last').contains('blog 2')
+
+        })
+
 
       })
     })
