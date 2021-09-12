@@ -33,12 +33,11 @@ const Blog = ({ blog, increaseLike, deleteBlog, user }) => {
       <div style={hideStyle} className='hideStyle'>
         {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
       </div>
-      <div style={showStyle}>
+      <div style={showStyle} className={'showStyle'}>
         {blog.title} <button onClick={toggleVisibility}>hide</button> <br/>
         {blog.url}<br/>
         {blog.likes} <button onClick={increaseLike}>like</button><br/>
         {blog.author}<br/>
-        {console.log(blog.user, user.id)}
         {blog.user.username === user.username || blog.user === user.id ? <button onClick={deleteBlog}>remove</button> : ''}<br/>
       </div>
     </div>

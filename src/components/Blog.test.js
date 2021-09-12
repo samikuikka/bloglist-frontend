@@ -1,6 +1,7 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, fireEvent} from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+// eslint-disable-next-line no-unused-vars
 import { prettyDOM } from '@testing-library/dom'
 import Blog from './Blog'
 
@@ -35,5 +36,40 @@ test('renders blog title and author but no url and number of likes', () => {
 
   expect(div).not.toHaveTextContent('test url')
   expect(div).not.toHaveTextContent('10')
+})
+
+test('blog url and number of likes shown when "view" button clicked', () => {
+  const blog = {
+    title: 'Blog tests',
+    author: 'Loon',
+    url: 'test url',
+    likes: 10,
+    user: {
+      username: 'Loon'
+    }
+  }
+
+  const increaseLike = jest.fn()
+  const deleteBlog = jest.fn()
+  const user = {
+    token: 'abcdefg',
+    username: 'Loon',
+    name: 'Sami',
+    id: '123456'
+  }
+
+  const component = render(
+    <Blog blog={blog} increaseLike={increaseLike} deleteBlog={deleteBlog} user={user} />
+  )
+
+  const div = component.container.querySelector('.showStyle')
+  expect(div).toHaveStyle({ display: 'none' })
+
+  const button = component.getByText('view')
+  fireEvent.click(button)
+
+  expect(div).not.toHaveStyle({ display: 'none' })
+  expect(div).toHaveTextContent('test url')
+  expect(div).toHaveTextContent('10')
 
 })
