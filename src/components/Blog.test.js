@@ -1,8 +1,6 @@
 import React from 'react'
-import { render, fireEvent} from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-// eslint-disable-next-line no-unused-vars
-import { prettyDOM } from '@testing-library/dom'
 import Blog from './Blog'
 
 test('renders blog title and author but no url and number of likes', () => {
@@ -71,5 +69,40 @@ test('blog url and number of likes shown when "view" button clicked', () => {
   expect(div).not.toHaveStyle({ display: 'none' })
   expect(div).toHaveTextContent('test url')
   expect(div).toHaveTextContent('10')
+
+})
+
+test('if like button clicked twice, it executes increaseLike only twice', () => {
+  const blog = {
+    title: 'Blog tests',
+    author: 'Loon',
+    url: 'test url',
+    likes: 10,
+    user: {
+      username: 'Loon'
+    }
+  }
+
+  const increaseLike = jest.fn()
+  const deleteBlog = jest.fn()
+  const user = {
+    token: 'abcdefg',
+    username: 'Loon',
+    name: 'Sami',
+    id: '123456'
+  }
+
+  const component = render(
+    <Blog blog={blog} increaseLike={increaseLike} deleteBlog={deleteBlog} user={user} />
+  )
+
+  const viewButton = component.getByText('view')
+  fireEvent.click(viewButton)
+
+  const likeButton = component.getByText('like')
+  fireEvent.click(likeButton)
+  fireEvent.click(likeButton)
+
+  expect(increaseLike.mock.calls).toHaveLength(2)
 
 })
