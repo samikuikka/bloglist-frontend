@@ -38,6 +38,26 @@ describe('Blog app', function() {
 
       cy.get('html').should('not.contain', 'Superuser logged in')
     })
+
+    describe('When logged in', function() {
+      beforeEach(function() {
+        cy.get('#username').type('root')
+        cy.get('#password').type('salainen')
+        cy.get('#login-button').click()
+      })
+
+      it('A blog can be created', function() {
+        cy.contains('create new blog').click()
+        cy.get('#title').type('The Art of Coding')
+        cy.get('#author').type('Loon')
+        cy.get('#url').type('http://abcdefghjlk.com')
+        cy.get('#create-button').click()
+
+        cy.contains('The Art of Coding')
+      })
+    })
+
   })
+
 
 })
