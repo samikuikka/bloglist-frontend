@@ -7,17 +7,17 @@ import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 
+import { setNotification } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
+import { setError } from './reducers/isErrorReducer'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-
-  //Notification
-  const [message, setMessage] = useState(null)
-  const [isError, setError] = useState(true)
-
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -49,17 +49,12 @@ const App = () => {
       setUsername('')
       setPassword('')
 
-      setError(false)
-      setMessage('Logged in!')
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
+      dispatch(setError(false))
+      dispatch(setNotification('Logged in!'))
+
     } catch (exception) {
-      setError(true)
-      setMessage('Wrong username or password')
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
+      dispatch(setError(true))
+      dispatch(setNotification('Wrong username or password'))
     }
   }
 
@@ -93,18 +88,12 @@ const App = () => {
       .then(blog => {
         setBlogs(blogs.concat(blog))
 
-        setError(false)
-        setMessage(`a new blog "${blog.title}" by ${blog.author} added.`)
-        setTimeout(() => {
-          setMessage(null)
-        }, 3000)
+        dispatch(setError(false))
+        dispatch(setNotification(`a new blog "${blog.title}" by ${blog.author} added.`))
       })
-      .catch(error => {
-        setError(true)
-        setMessage(`${error}`)
-        setTimeout(() => {
-          setMessage(null)
-        }, 3000)
+      .catch( error  => {
+        dispatch(setError(true))
+        dispatch(setNotification(`${error}`))
       })
   }
 
@@ -120,20 +109,14 @@ const App = () => {
           setBlogs(blogs.filter(b => b.id !== id))
 
           //Succes message
-          setError(false)
-          setMessage(`${blog.title} deleted!`)
-          setTimeout( () => {
-            setMessage(null)
-          },3000)
+          dispatch(setError(false))
+          dispatch(setNotification(`${blog.title} deleted!`))
         })
         .catch(error => {
           //Error message
           console.log(error.response.data)
-          setError(true)
-          setMessage(`Error in deleting a person: ${error.response.data.error}`)
-          setTimeout(() => {
-            setMessage(null)
-          }, 3000)
+          dispatch(setError(true))
+          dispatch(setNotification(`Error in deleting a person: ${error.response.data.error}`))
         })
     }
   }
@@ -142,7 +125,7 @@ const App = () => {
   if(user === null) {
     return (
       <div>
-        <Notification message={message} isError={isError} />
+        <Notification />
         <LoginForm
           onSubmit={handleLogin}
           username={username}
@@ -156,7 +139,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} isError={isError} />
+      <Notification />
       <div>
         <p>{user.name} logged in. <button type="button" onClick={handleLogout}>logout</button></p>
       </div>
