@@ -10,7 +10,7 @@ import Togglable from './components/Togglable'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { setError } from './reducers/isErrorReducer'
-import { initialize, createBlog } from './reducers/blogsReducer'
+import { initialize, createBlog, like, removeBlog } from './reducers/blogsReducer'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
@@ -57,23 +57,10 @@ const App = () => {
   }
 
   //LIKE FUNCTIONALITY
-  /*
   const increaseLike = id => {
     const blog = blogs.find(blog => blog.id === id)
-
-    const data = {
-      title: blog.title,
-      author: blog.title,
-      url: blog.url,
-      likes: blog.likes + 1,
-    }
-
-    blogService
-      .update(id, data)
-      .then(returnedBlog => {
-        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
-      })
-  }*/
+    dispatch(like(blog))
+  }
 
 
   const handleLogout = async (event) => {
@@ -95,30 +82,22 @@ const App = () => {
   }
 
   //DELETING BLOGS
-  /*
   const deleteBlog = id => {
     const blog = blogs.find(blog => blog.id === id)
     const result = window.confirm(`Remove ${blog.title} by ${blog.author}?`)
     console.log(blog)
 
     if(result) {
-      blogService
-        .deleteBlog(id)
-        .then(() => {
-          setBlogs(blogs.filter(b => b.id !== id))
-
-          //Succes message
-          dispatch(setError(false))
-          dispatch(setNotification(`${blog.title} deleted!`))
-        })
-        .catch(error => {
-          //Error message
-          console.log(error.response.data)
-          dispatch(setError(true))
-          dispatch(setNotification(`Error in deleting a person: ${error.response.data.error}`))
-        })
+      try {
+        dispatch(removeBlog(id))
+        dispatch(setError(false))
+        dispatch(setNotification(`${blog.title} deleted!`))
+      } catch(error) {
+        dispatch(setError(true))
+        dispatch(setNotification(`Error in deleting a person: ${error.response.data.error}`))
+      }
     }
-  }*/
+  }
 
 
   if(user === null) {
@@ -151,7 +130,7 @@ const App = () => {
       </Togglable>
       <div className='blogs'>
         {blogs.sort((x,y) => y.likes - x.likes).map(blog =>
-          <Blog key={blog.id} blog={blog} increaseLike={() => console.log('in progress')} deleteBlog={() => console.log('in progress')} user={user} />
+          <Blog key={blog.id} blog={blog} increaseLike={() => increaseLike(blog.id)} deleteBlog={() => deleteBlog(blog.id)} user={user} />
         )}
       </div>
     </div>
